@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>ZN BOT V6 PRO</title>
+</head>
+
+<body style="background:black;color:white;text-align:center;font-family:Arial">
+
+<h2>🔐 LOGIN</h2>
+<input type="password" id="password" placeholder="Password">
+<br><br>
+<button onclick="login()">Login</button>
+
+<div id="bot" style="display:none;margin-top:30px">
+<h2>🤖 ZN BOT V6 ● LIVE</h2>
+
+<p id="time"></p>
+
+<select id="market">
+<option>EUR/USD</option>
+<option>GBP/USD</option>
+<option>USD/JPY</option>
+<option>EUR/USD OTC</option>
+<option>GBP/USD OTC</option>
+<option>EURNZD OTC</option>
+<option>USD/CAD OTC</option>
+<option>USD/ARS OTC</option>
+<option>USD/EGP OTC</option>
+<option>NZD/CAD OTC</option>
+<option>USD/COP OTC</option>
+<option>USD/BRL OTC</option>
+<option>USD/INR OTC</option>
+<option>USD/DZD OTC</option>
+<option>USD/PKR OTC</option>
+</select>
+
+<br><br>
+
+<button onclick="scan()">SCAN</button>
+<button onclick="auto()">AUTO</button>
+
+<h3 id="status">READY...</h3>
+<h2 id="signal"></h2>
+
+</div>
+
+<script>
+
+const correctPassword = "omarislam";
+let autoRun = null;
+
+// LOGIN
+function login(){
+let pass = document.getElementById("password").value;
+
+if(pass === correctPassword){
+document.getElementById("bot").style.display="block";
+}else{
+alert("Wrong Password");
+}
+}
+
+// TIME
+setInterval(()=>{
+document.getElementById("time").innerHTML = new Date().toLocaleTimeString();
+},1000);
+
+// NEXT CANDLE TIME
+function nextCandleTime(){
+let now = new Date();
+now.setSeconds(0);
+now.setMilliseconds(0);
+now.setMinutes(now.getMinutes()+1);
+return now.toLocaleTimeString();
+}
+
+// SIGNAL LOGIC
+function generateSignal(){
+
+let market = document.getElementById("market").value;
+
+// 🔥 Fake indicator simulation (structure real)
+let ema20 = Math.random()*100;
+let ema50 = Math.random()*100;
+let rsi = Math.random()*100;
+
+let result = "WAIT";
+
+// STRATEGY
+if(ema20 > ema50 && rsi < 30){
+result = "CALL 📈";
+}
+else if(ema20 < ema50 && rsi > 70){
+result = "PUT 📉";
+}
+
+// NEXT CANDLE TIME
+let entryTime = nextCandleTime();
+
+// UI OUTPUT
+if(result === "WAIT"){
+document.getElementById("signal").innerHTML =
+"PAIR: "+market+"<br>NO SIGNAL...";
+}else{
+document.getElementById("signal").innerHTML =
+"PAIR: "+market+
+"<br>ENTRY: "+entryTime+
+"<br>SIGNAL: "+result;
+}
+
+document.getElementById("status").innerHTML = "SMART SIGNAL READY";
+}
+
+// SCAN
+function scan(){
+document.getElementById("status").innerHTML="ANALYZING...";
+setTimeout(generateSignal,1500);
+}
+
+// AUTO
+function auto(){
+if(autoRun){
+clearInterval(autoRun);
+}
+autoRun = setInterval(generateSignal,60000);
+document.getElementById("status").innerHTML="AUTO RUNNING";
+}
+
+</script>
+
+</body>
+</html>
